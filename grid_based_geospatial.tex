@@ -1,0 +1,52 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%		Kommentar
+%		Ein nettes old school template.......
+%		last modified: 27/03/07
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper,11pt,twoside]{scrartcl}
+\include{dude-template}
+
+\begin{document}
+\renewcommand{\theequation}{\thesection.\arabic}
+\addtokomafont{caption}{\small}
+\setkomafont{captionlabel}{\sffamily\bfseries}
+\numberwithin{equation}{section}
+\pagenumbering{Roman}
+\setcapindent*{1em}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%		Titelseite
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\titlehead{
+	\begin{minipage}{0.6\textwidth}{\IFSlogo[50mm]}
+ 	\end{minipage}
+	\begin{minipage}{0.4\textwidth}
+		\footnotesize \rightline{HSR Rapperswil} \rightline{Institut für Software}
+	\end{minipage}
+ } 
+
+\author{Silvio Heuberger and Stefan Keller\\ Institut für Software}
+\subject{Extended Abstract}
+\title{Extending a grid based geocoding system with geospatial functions}
+\date{April 2010}
+\publishers{}
+\dedication{} 
+\maketitle
+
+
+\fontspec[Numbers={OldStyle}, Ligatures={Common}]{Adobe Garamond Pro}
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%		Ab hier gehts los mit dem Dokument
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Was macht Ruby so speziell?} % (fold)
+afsdf dsfd sfds fsdf sdf asdsdf
+
+
+\end{document}
