@@ -45,8 +45,71 @@
 %		Ab hier gehts los mit dem Dokument
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Was macht Ruby so speziell?} % (fold)
-afsdf dsfd sfds fsdf sdf asdsdf
+\section{Geohash.org} % (fold)
+When writing the site \url{geohash.org} in 2008 Gustavo Niemeyer invented the so-called geohash. Initially a geohash was to be used to shorten and simplify the handling of geographic coordinates so they can be used more efficiently in URLs and e-mail. For instance, the point $(47.864500, 8.842342)$ can be represented by the geohash \texttt{u0w231qyct80}.
 
+Because this geohash is acquired by gradually subdividing the latitude and longitude range into smaller boxes, this hash does not actually represent a point, but an arbitrarily small bounding box. One can remove accuracy (i.e. make the bounding box bigger) by removing bits (characters) from the hash. Removing characters from the end of the geohash, yields \texttt{u0w23} which is the bounding box
+\[
+(47.8564453125,8.8330078125) \rightarrow (47.900390625,8.876953125)
+\]
+centered around the point $(47.9, 8.9)$.
+
+Since the hash is base32-encoded removing characters will remove multiples of 5 bits.
+
+
+\section{Maximal bounding box size with 64 bits} % (fold)
+\label{sec:maximal_precision_with_64_bits}
+If we encode a coordinate pair $p = (9.004046, -79.523453, 64)$ down to the maximal precision that can be obtained by using a \texttt{long} as storage, we end up with the following hash (alas, it cannot be meaningfully represented in base32):
+
+\[
+h_p = 110000001111010011110100101111000011010000110010111111011001100
+\]
+
+which represents the following bounding box:
+
+\[
+(9.004045994952321,-79.52345302328467)
+\]
+\[
+(9.004046036861837,-79.52345293946564)
+\]
+
+This hash's bounding box (in Panamà) has a diagonale of about $\approx 0.8084 cm$. Since this is near the equator, bounding boxes that are closer to the poles will only get smaller, for example a 64-bit bounding box in Ystad will yield a diagonale of $\approx 0.70667 cm$.
+
+Having established that a 64-bit long is actually a good approximation as a pretty small bounding box around a coordinate point, we can move on to more interesting facts, for instance proximity.
+
+
+\section{The implementation of a geohash as a long} % (fold)
+\label{sec:the_implementation_of_a_geohash_as_a_long}
+
+
+% section the_implementation_of_a_geohash_as_a_long (end)
+
+
+\section{Same prefix for larger bounding boxes} % (fold)
+\label{sec:same_prefix_for_larger_bounding_boxes}
+It can be seen that removing precision from a hash will yield a less precise hash, that includes all the hashes that share the shorter hash as a prefix.
+The hash \texttt{u0w231qyct80} is completely \emph{within} all of the following hashes: \texttt{u0w2, u0w231, u0w231qyc}
+
+Subsequently, the hash \texttt{u0w2} \emph{contains} a theoretically infinitely large set of hashes, all sharing the common prefix \texttt{u0w2}.
+
+It can easily be seen that the hash \texttt{bcde} is clearly \emph{not within} \texttt{u0w2}.
+
+Looking at this fact from a “binary perspective”, one can easily see, that the question wether a hash lies within another hash's bounding box simply boils down to a binary operation, based on the prefix of the hash:
+
+\begin{lstlisting}
+public boolean within(GeoHash boundingBox) {
+  return (bits & boundingBox.mask()) == boundingBox.bits;
+}
+\end{lstlisting}
+
+Iff the first bits of the hash are the same as of the bounding box, it is contained within the bounding box.
+
+
+% section same_prefix_for_larger_bounding_boxes (end)
+
+\section{Similar hashes for nearby points} % (fold)
+\label{sec:similar_hashes_for_nearby_pojnts}
+Since the geohash is built as an interleaved set of bits for each subsequent latitude or longitude range division, nearby boxes often have similar prefixes. Alas, this is not always the case, because there's also corner cases that cross boundaries that go beyond the prefix of the hash.
 
 \end{document}
