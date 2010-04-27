@@ -56,6 +56,25 @@ centered around the point $(47.9, 8.9)$.
 
 Since the hash is base32-encoded removing characters will remove multiples of 5 bits.
 
+However when representing the hash as interleaved bits of a long, one can also remove a single bit, i.e. a single subdivision of either the latitude or longitude range.
+
+\section{Encoding a geohash as a \texttt{long}} % (fold)
+\label{sec:encoding_a_geohash_as_a_}
+The algorithm to encode a coordinate pair $p = (lat,lon)$ into a geohash bounding box works as follows:
+
+\begin{enumerate}
+	\item Start with the latitude and longitude ranges $r_{lat} = (-90,90)$ and $r_{lon} = (-180,180)$ and an empty hash with no bits set.
+	\item \begin{enumerate}
+		\item For even bits, find the arithmetic mean $\hat{lon}$ of $r_{lon}$ and flip the last bit on, if $lon \geq \hat{lon}$. Make the arithmetic mean the new start or end of $r_{lon}$ respectively for the next step.
+		\item For odd bits, do the same thing as in (a) but use the range $r_{lat}$ and $lat$.
+	\end{enumerate}
+	\item Continue at (2) until the desired precision is acquired.
+	\item Use a left shift, to align the determined bits at the “front” of the \texttt{long}.
+\end{enumerate}
+
+The last step is necessary, in order for the bits to be at the start of the hash, thus enabling a simple mask to be used to extract any prefix of a hash.
+% section encoding_a_geohash_as_a_ (end)
+
 
 \section{Maximal bounding box size with 64 bits} % (fold)
 \label{sec:maximal_precision_with_64_bits}
@@ -77,13 +96,6 @@ which represents the following bounding box:
 This hash's bounding box (in Panamà) has a diagonale of about $\approx 0.8084 cm$. Since this is near the equator, bounding boxes that are closer to the poles will only get smaller, for example a 64-bit bounding box in Ystad will yield a diagonale of $\approx 0.70667 cm$.
 
 Having established that a 64-bit long is actually a good approximation as a pretty small bounding box around a coordinate point, we can move on to more interesting facts, for instance proximity.
-
-
-\section{The implementation of a geohash as a long} % (fold)
-\label{sec:the_implementation_of_a_geohash_as_a_long}
-
-
-% section the_implementation_of_a_geohash_as_a_long (end)
 
 
 \section{Same prefix for larger bounding boxes} % (fold)
