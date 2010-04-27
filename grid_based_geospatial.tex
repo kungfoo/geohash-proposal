@@ -72,12 +72,14 @@ The algorithm to encode a coordinate pair $p = (lat,lon)$ into a geohash boundin
 	\item Use a left shift, to align the determined bits at the “front” of the \texttt{long}.
 \end{enumerate}
 
-The last step is necessary, in order for the bits to be at the start of the hash, thus enabling a simple mask to be used to extract any prefix of a hash.
+The last step is necessary, in order for the bits to be at the start of the hash, thus enabling a simple mask to be used to extract any prefix of a hash and use it to check wether other hashes lie \emph{within} it.
 % section encoding_a_geohash_as_a_ (end)
 
 
 \section{Maximal bounding box size with 64 bits} % (fold)
 \label{sec:maximal_precision_with_64_bits}
+We quickly want to establish an approximation of the accuracy such a hash achieves, when representing point data.
+
 If we encode a coordinate pair $p = (9.004046, -79.523453, 64)$ down to the maximal precision that can be obtained by using a \texttt{long} as storage, we end up with the following hash (alas, it cannot be meaningfully represented in base32):
 
 \[
@@ -95,7 +97,7 @@ which represents the following bounding box:
 
 This hash's bounding box (in Panamà) has a diagonale of about $\approx 0.8084 cm$. Since this is near the equator, bounding boxes that are closer to the poles will only get smaller, for example a 64-bit bounding box in Ystad will yield a diagonale of $\approx 0.70667 cm$.
 
-Having established that a 64-bit long is actually a good approximation as a pretty small bounding box around a coordinate point, we can move on to more interesting facts, for instance proximity.
+Having established that a 64-bit long is actually a good approximation as a pretty small bounding box around a coordinate point, we can move on to more interesting facts, for instance proximity of hashes.
 
 
 \section{Same prefix for larger bounding boxes} % (fold)
@@ -109,11 +111,7 @@ It can easily be seen that the hash \texttt{bcde} is clearly \emph{not within} \
 
 Looking at this fact from a “binary perspective”, one can easily see, that the question wether a hash lies within another hash's bounding box simply boils down to a binary operation, based on the prefix of the hash:
 
-\begin{lstlisting}
-public boolean within(GeoHash boundingBox) {
-  return (bits & boundingBox.mask()) == boundingBox.bits;
-}
-\end{lstlisting}
+TODO: Explain binary operation.
 
 Iff the first bits of the hash are the same as of the bounding box, it is contained within the bounding box.
 
