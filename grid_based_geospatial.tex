@@ -7,7 +7,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\documentclass[a4paper,11pt,twoside]{scrartcl}
+\documentclass[a4paper,11pt,oneside]{scrartcl}
 \include{dude-template}
 
 \begin{document}
@@ -97,7 +97,7 @@ which represents the following bounding box:
 
 This hash's bounding box (in Panamà) has a diagonale of about $\approx 0.8084 cm$. Since this is near the equator, bounding boxes that are closer to the poles will only get smaller, for example a 64-bit bounding box in Ystad will yield a diagonale of $\approx 0.70667 cm$.
 
-Having established that a 64-bit long is actually a good approximation as a pretty small bounding box around a coordinate point, we can move on to more interesting facts, for instance proximity of hashes.
+Having established that a 64-bit \texttt{long} is actually a good approximation as a pretty small bounding box around a coordinate point, we can move on to more interesting facts, for instance proximity of hashes.
 
 
 \section{Same prefix for larger bounding boxes} % (fold)
@@ -105,7 +105,7 @@ Having established that a 64-bit long is actually a good approximation as a pret
 It can be seen that removing precision from a hash will yield a less precise hash, that includes all the hashes that share the shorter hash as a prefix.
 The hash \texttt{u0w231qyct80} is completely \emph{within} all of the following hashes: \texttt{u0w2, u0w231, u0w231qyc}
 
-Subsequently, the hash \texttt{u0w2} \emph{contains} a theoretically infinitely large set of hashes, all sharing the common prefix \texttt{u0w2}.
+Subsequently, the hash \texttt{u0w2} \emph{contains} a theoretically infinitely large set of hashes (of course the set of 64-bit hashes is limited, but we don't need to stop there), all sharing the common prefix \texttt{u0w2}.
 
 It can easily be seen that the hash \texttt{bcde} is clearly \emph{not within} \texttt{u0w2}.
 
@@ -120,6 +120,20 @@ Iff the first bits of the hash are the same as of the bounding box, it is contai
 
 \section{Similar hashes for nearby points} % (fold)
 \label{sec:similar_hashes_for_nearby_pojnts}
-Since the geohash is built as an interleaved set of bits for each subsequent latitude or longitude range division, nearby boxes often have similar prefixes. Alas, this is not always the case, because there's also corner cases that cross boundaries that go beyond the prefix of the hash.
+Since the geohash is built as an interleaved set of bits for each subsequent latitude or longitude range division, nearby boxes often have similar prefixes. Alas, this is not always the case, because there's also corner cases that cross boundaries that go beyond the prefix of the hash. If we hit a boundary, the hashes might suddenly “flip over” to a rather different prefix. This is especially true around the meridians.
+
+For instance, the point $p = (41.7, 0.08)$ encodes into the following four-character geohash: \texttt{sp2j}.
+Out of it's eight neighbouring hashes, only 5 have a similar prefix as can be seen in figure~\ref{fig:4-grid}
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=7cm]{graphics/grid_meridian.pdf}
+	\caption{The 4-character geohash grid around the point $p = (41.7, 0.08)$}
+	\label{fig:4-grid}
+\end{figure}
+
+This makes using geohashes for proximity searches a little bit harder but not impossible. There's a simple formula that will wrap around meridians correctly when calculating neighbouring hashes programatically.
+
+
 
 \end{document}
