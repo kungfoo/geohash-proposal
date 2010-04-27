@@ -134,26 +134,35 @@ Out of it's eight neighbouring hashes, only 5 have a similar prefix as can be se
 
 This makes using geohashes for proximity searches a little awkward but not impossible. There's a simple algorithm that will wrap around meridians correctly when calculating neighbouring hashes programatically:
 
+\section{Moving around with hashes} % (fold)
+\label{sec:Moving around with hashes}
+
+Finding the nearby hashes might seem awkward at first, but there's a pretty simple way to determine the hash that lies in a specific direction, when starting out with a hash.
+
 \begin{enumerate}
   \item Split the interleaved bits into two seperate numbers $bits_{lat}$ and $bits_{lon}$. Make them right-aligned instead of left-aligned by shifting them right the appropriate number of places.
   \item Depending on the direction you want to find the next hash, add or subtract one from the latitude or longitude bits:
   \begin{enumerate}
-    \item North: $bits_{lat} += 1$
-    \item South: $bits_{lat} -= 1$
-    \item East: $bits_{lon} += 1$
-    \item West: $bits_{lon} -= 1$
+    \item North: $bits_{lat} \stackrel{+}{=} 1$
+    \item South: $bits_{lat} \stackrel{-}{=} 1$
+    \item East: $bits_{lon} \stackrel{+}{=} 1$
+    \item West: $bits_{lon} \stackrel{-}{=} 1$
   \end{enumerate}
   \item After this step, recombine the bits in an interleaved fashion.
 \end{enumerate}
 
+
 \section{Size of the bounding boxes for $n$ bits} % (fold)
 \label{sec:Size of the bounding boxes for $n$ bits}
-There is a simple correlation between the number of bits $n$ and the size of a bounding box in degrees.
+There is a simple correlation between the number of bits $n$ and the size $\delta$ of a bounding box in degrees.
 
 \begin{displaymath}
-  \delta_{lat} = \frac{180}{2^{(\lfloor \frac{n}{2} \rfloor)}}
+  \delta_{lat} = \frac{180}{2^{\lfloor \frac{n}{2} \rfloor}}
 \end{displaymath}
 
+\begin{displaymath}
+  \delta_{lon} = \frac{360}{2^{\lfloor \frac{n+1}{2} \rfloor}}
+\end{displaymath}
 
 % section Size of the bounding boxes for $n$ bits (end)
 
