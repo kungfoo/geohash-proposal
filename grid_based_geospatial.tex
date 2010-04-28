@@ -45,7 +45,7 @@
 %		Ab hier gehts los mit dem Dokument
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Geohash.org} % (fold)
+\section{Introduction to geohashes} % (fold)
 When writing the site \url{geohash.org} in 2008 Gustavo Niemeyer invented the so-called geohash. Initially a geohash was to be used to shorten and simplify the handling of geographic coordinates so they can be used more efficiently in URLs and e-mail. For instance, the point $(47.864500, 8.842342)$ can be represented by the geohash \texttt{u0w231qyct80}.
 
 Because this geohash is acquired by gradually subdividing the latitude and longitude range into smaller boxes, this hash does not actually represent a point, but an arbitrarily small bounding box. One can remove accuracy (i.e. make the bounding box bigger) by removing bits (characters) from the hash. Removing characters from the end of the geohash, yields \texttt{u0w23} which is the bounding box
@@ -154,7 +154,7 @@ Finding the nearby hashes might seem awkward at first, but there's a pretty simp
 
 \section{Size of the bounding boxes for $n$ bits} % (fold)
 \label{sec:Size of the bounding boxes for $n$ bits}
-There is a simple correlation between the number of bits $n$ and the size $\delta$ of a bounding box in degrees.
+There is a simple correlation between the number of bits $n$ and the size $\delta$ of a geohash bounding box in degrees.
 
 \begin{displaymath}
   \delta_{lat} = \frac{180}{2^{\lfloor \frac{n}{2} \rfloor}}
@@ -166,10 +166,20 @@ There is a simple correlation between the number of bits $n$ and the size $\delt
 
 Using this information, it should be possible to determine the “ideal” geohash size to represent a given bounding box. Of course, the hash might incorporate too much area, but will still yield a simple way to discard data outside of it in an on-line algorithm producing no false negatives.
 
-
+TODO: rewrite this paragraph, so that it reflects the newest findings.
 
 
 % section Size of the bounding boxes for $n$ bits (end)
 
+
+\section{Outlook} % (fold)
+\label{sec:Outlook}
+There's still a lot to explore concerning the topic of geohashes.
+
+The idea of the geohash as a patent-free spatial index could for instance be of use in areas, where full-blown geospatial functions are unavailable.
+
+Geohash-like indexes have shown up in some NoSql-databases, such as mongodb\footnote{\url{http://www.mongodb.org}} recently. Whether they offer a significant advantage in terms of simplicity or speed over traditional spatial indices, has yet to be shown.
+
+% section Outlook (end)
 
 \end{document}
