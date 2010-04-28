@@ -164,6 +164,9 @@ There is a simple correlation between the number of bits $n$ and the size $\delt
   \delta_{lon} = \frac{360}{2^{\lfloor \frac{n+1}{2} \rfloor}}
 \end{displaymath}
 
+Using this information, it should be possible to determine the “ideal” geohash size to represent a given bounding box. Of course, the hash might incorporate too much area, but will still yield a simple way to discard data outside of it in an on-line algorithm producing no false negatives.
+
+
 
 
 % section Size of the bounding boxes for $n$ bits (end)
