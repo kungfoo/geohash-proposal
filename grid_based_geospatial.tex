@@ -46,17 +46,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction to geohashes} % (fold)
-When writing the site \url{geohash.org} in 2008 Gustavo Niemeyer invented the so-called geohash. Initially a geohash was to be used to shorten and simplify the handling of geographic coordinates so they can be used more efficiently in URLs and e-mail. For instance, the point $(47.864500, 8.842342)$ can be represented by the geohash \texttt{u0w231qyct80}.
+When writing the site \url{geohash.org} in 2008 Gustavo Niemeyer invented the so-called geohash. Initially a geohash was to be used to simplify the handling of geographic coordinates, so they can be used more efficiently in URLs and e-mail. For instance, the point $(47.864500, 8.842342)$ can be represented by the geohash \texttt{u0w231qyct80}.
 
 Because this geohash is acquired by gradually subdividing the latitude and longitude range into smaller boxes, this hash does not actually represent a point, but an arbitrarily small bounding box. One can remove accuracy (i.e. make the bounding box bigger) by removing bits (characters) from the hash. Removing characters from the end of the geohash, yields \texttt{u0w23} which is the bounding box
 \[
 (47.8564453125,8.8330078125) \rightarrow (47.900390625,8.876953125)
 \]
-centered around the point $(47.9, 8.9)$.
+centered around the point $(47.9, 8.9)$ which is still not too far away from our initial point.
 
 Since the hash is base32-encoded removing characters will remove multiples of 5 bits.
 
-However when representing the hash as interleaved bits of a long, one can also remove a single bit, i.e. a single subdivision of either the latitude or longitude range.
+However, to overcome this limitation, one can represent the hash as interleaved bits of a long, thus enabling removal of a single bit, i.e. a single subdivision of either the latitude or longitude range.
 
 \section{Encoding a geohash as a \texttt{long}} % (fold)
 \label{sec:encoding_a_geohash_as_a_}
@@ -68,7 +68,7 @@ The algorithm to encode a coordinate pair $p = (lat,lon)$ into a geohash boundin
 		\item For even bits, find the arithmetic mean $\hat{lon}$ of $r_{lon}$ and flip the last bit on, if $lon \geq \hat{lon}$. Make the arithmetic mean the new start or end of $r_{lon}$ respectively for the next step.
 		\item For odd bits, do the same thing as in (a) but use the range $r_{lat}$ and $lat$.
 	\end{enumerate}
-	\item Continue at (2) until the desired precision is acquired.
+	\item Continue with (2) until the desired precision is acquired.
 	\item Use a left shift, to align the determined bits at the “front” of the \texttt{long}.
 \end{enumerate}
 
@@ -164,9 +164,9 @@ There is a simple correlation between the number of bits $n$ and the size $\delt
   \delta_{lon} = \frac{360}{2^{\lfloor \frac{n+1}{2} \rfloor}}
 \end{displaymath}
 
-Using this information, it should be possible to determine the “ideal” geohash size to represent a given bounding box. Of course, the hash might incorporate too much area, but will still yield a simple way to discard data outside of it in an on-line algorithm producing no false negatives.
+Using this information, it is possible to determine the “ideal” geohash size to represent a given bounding box. Of course, the hash might incorporate too much area, but will still yield a simple way to discard data outside of it in an on-line algorithm producing no false negatives.
 
-TODO: rewrite this paragraph, so that it reflects the newest findings.
+
 
 
 % section Size of the bounding boxes for $n$ bits (end)
@@ -176,9 +176,11 @@ TODO: rewrite this paragraph, so that it reflects the newest findings.
 \label{sec:Outlook}
 There's still a lot to explore concerning the topic of geohashes.
 
-The idea of the geohash as a patent-free spatial index could for instance be of use in areas, where full-blown geospatial functions are unavailable.
+Geohashes could be used as a patent-free spatial index, where full blown spatial functions are not available. 
 
 Geohash-like indexes have shown up in some NoSql-databases, such as mongodb\footnote{\url{http://www.mongodb.org}} recently. Whether they offer a significant advantage in terms of simplicity or speed over traditional spatial indices, has yet to be shown.
+
+
 
 % section Outlook (end)
 
